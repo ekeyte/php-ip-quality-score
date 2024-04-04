@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# change to root
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd $DIR/..
+
+# Add --ignore-platform-reqs if argument to script is `install` or `require`
+case $1 in
+    install)
+        CMD="install --ignore-platform-reqs"
+        ;;
+    require)
+        CMD="require --ignore-platform-reqs"
+        ;;
+    *)
+        CMD=$1
+        ;;
+esac
+
+docker container run \
+    --rm -it \
+    -v $(pwd):/app \
+    -v ~/.composer:/tmp \
+    --user $(id -u):$(id -g) \
+    composer:2.4.3 $@
